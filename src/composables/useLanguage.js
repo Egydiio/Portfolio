@@ -105,7 +105,7 @@ const translations = {
                 email: 'Email',
                 phone: 'Telefone',
                 location: 'Localização',
-                locationValue: 'São Paulo, Brasil'
+                locationValue: 'Minas Gerais, Brasil'
             },
             social: {
                 title: 'Redes Sociais'
