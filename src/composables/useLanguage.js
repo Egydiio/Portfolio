@@ -40,6 +40,14 @@ const translations = {
             description: 'Minha jornada profissional e as empresas com as quais tive o privilégio de trabalhar.',
             jobs: [
                 {
+                    title: 'Desenvolvedor PHP',
+                    company: 'Dommus Tecnologia',
+                    period: 'Jun 2025 - Presente',
+                    description: 'Desenvolvimento e manutenção de módulos específicos de um sistema ERP voltado para o setor imobiliário.\n' +
+                        'Utilizo PHP puro e o microframework Lumen no back-end, desenvolvendo APIs e funcionalidades integradas. No front-end, trabalho com React.js e AngularJS para criação de interfaces modernas e responsivas. Também realizo operações com banco de dados MySQL, garantindo o bom desempenho e a integridade das informações nos módulos sob minha responsabilidade.',
+                    technologies: ['PHP', 'Lumen', 'React.js', 'AngularJS', 'MySQL', 'APIs RESTful']
+                },
+                {
                     title: 'Desenvolvedor Full Stack PHP',
                     company: 'Onfly',
                     period: '2023 - 2025',
@@ -161,6 +169,14 @@ const translations = {
             titleHighlight: 'Experience',
             description: 'My professional journey and the companies I\'ve had the privilege to work with.',
             jobs: [
+                {
+                    title: 'PHP Developer',
+                    company: 'Dommus Tecnologia',
+                    period: 'Jun 2025 - Present',
+                    description: 'Development and maintenance of specific modules of an ERP system for the real estate sector.\n' +
+                        'Using pure PHP and the Lumen microframework on the backend, developing APIs and integrated features. On the frontend, working with React.js and AngularJS to build modern and responsive interfaces. Also handling MySQL database operations, ensuring performance and data integrity across the modules under my responsibility.',
+                    technologies: ['PHP', 'Lumen', 'React.js', 'AngularJS', 'MySQL', 'RESTful APIs']
+                },
                 {
                     title: 'Full Stack PHP Developer',
                     company: 'Onfly',
