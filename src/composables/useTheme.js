@@ -1,16 +1,11 @@
 import { ref, onMounted } from 'vue';
 
 export function useTheme() {
-    const isDark = ref(false);
+    const isDark = ref(true);
 
     onMounted(() => {
-        // Load dark mode preference
-        const savedDarkMode = localStorage.getItem('darkMode');
-        if (savedDarkMode !== null) {
-            isDark.value = savedDarkMode === 'true';
-        } else {
-            isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        }
+        const saved = localStorage.getItem('darkMode');
+        isDark.value = saved !== null ? saved === 'true' : true;
     });
 
     const toggleDarkMode = () => {

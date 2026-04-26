@@ -1,88 +1,81 @@
 <template>
-  <nav class="fixed w-full z-10 bg-white/90 dark:bg-black/90 backdrop-blur-sm border-b border-gray-200 dark:border-yellow-500/20">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+  <header class="fixed top-0 left-0 right-0 z-40 flex justify-center pt-4 px-4">
+    <nav
+      class="flex items-center gap-1 px-3 py-2 rounded-2xl border transition-all duration-300"
+      :class="scrolled
+        ? 'bg-black/85 backdrop-blur-xl border-yellow-500/20 shadow-lg shadow-black/40'
+        : 'bg-black/50 backdrop-blur-md border-white/5'"
+    >
       <!-- Logo -->
-      <div class="text-yellow-500 font-bold text-xl">
-        <span class="text-black dark:text-white">&lt;</span>{{ t('nav.brand') }}<span class="text-black dark:text-white">/&gt;</span>
-      </div>
+      <a href="#home" class="mr-3 px-2 py-1 font-mono text-sm font-bold text-yellow-500 hover:text-yellow-400 transition-colors">
+        <span class="text-zinc-500">&lt;</span>eg<span class="text-zinc-500">/&gt;</span>
+      </a>
 
-      <!-- Desktop Navigation -->
-      <div class="hidden md:flex space-x-8 items-center">
-        <a v-for="item in navItems" :key="item.href" :href="item.href" class="hover:text-yellow-500 transition-colors">
-          {{ item.label }}
-        </a>
-
-        <!-- Language Toggle -->
-        <button
-            @click="toggleLanguage"
-            class="flex items-center space-x-2 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            :title="currentLanguage === 'pt' ? 'Switch to English' : 'Mudar para Português'"
-        >
-          <globe-icon class="h-4 w-4 text-gray-600 dark:text-gray-300" />
-          <span class="text-sm font-medium">{{ currentLanguage.toUpperCase() }}</span>
-        </button>
-
-        <!-- Dark Mode Toggle -->
-        <button
-            @click="toggleDarkMode"
-            class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            :title="isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
-        >
-          <sun-icon v-if="isDark" class="h-5 w-5 text-yellow-500" />
-          <moon-icon v-else class="h-5 w-5 text-gray-600" />
-        </button>
-      </div>
-
-      <!-- Mobile Controls -->
-      <div class="md:hidden flex items-center space-x-2">
-        <button
-            @click="toggleLanguage"
-            class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-        >
-          <span class="text-xs font-medium">{{ currentLanguage.toUpperCase() }}</span>
-        </button>
-
-        <button
-            @click="toggleDarkMode"
-            class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-        >
-          <sun-icon v-if="isDark" class="h-5 w-5 text-yellow-500" />
-          <moon-icon v-else class="h-5 w-5 text-gray-600" />
-        </button>
-
-        <button @click="toggleMobileMenu">
-          <menu-icon v-if="!mobileMenuOpen" class="h-6 w-6 text-yellow-500" />
-          <x-icon v-else class="h-6 w-6 text-yellow-500" />
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div v-if="mobileMenuOpen" class="md:hidden bg-white dark:bg-black border-b border-gray-200 dark:border-yellow-500/20 py-4">
-      <div class="container mx-auto px-4 flex flex-col space-y-4">
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex items-center gap-1">
         <a
-            v-for="item in navItems"
-            :key="item.href"
-            :href="item.href"
-            class="hover:text-yellow-500 transition-colors"
-            @click="closeMobileMenu"
-        >
-          {{ item.label }}
-        </a>
+          v-for="item in navItems"
+          :key="item.href"
+          :href="item.href"
+          class="px-3 py-1.5 rounded-xl text-sm transition-all duration-200 font-medium"
+          :class="activeSection === item.id
+            ? 'text-yellow-500 bg-yellow-500/10'
+            : 'text-zinc-400 hover:text-white hover:bg-white/5'"
+        >{{ item.label }}</a>
       </div>
-    </div>
-  </nav>
+
+      <!-- Controls -->
+      <div class="flex items-center gap-1 ml-3 pl-3 border-l border-white/10">
+        <button
+          @click="toggleLanguage"
+          class="px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold text-zinc-400 hover:text-white hover:bg-white/5 transition-all"
+          :title="currentLanguage === 'pt' ? 'Switch to English' : 'Mudar para Português'"
+        >{{ currentLanguage.toUpperCase() }}</button>
+
+        <button
+          @click="toggleDarkMode"
+          class="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition-all"
+          :title="isDark ? 'Light mode' : 'Dark mode'"
+        >
+          <sun-icon v-if="isDark" class="w-4 h-4 text-yellow-500" />
+          <moon-icon v-else class="w-4 h-4" />
+        </button>
+
+        <!-- Mobile hamburger -->
+        <button
+          @click="mobileOpen = !mobileOpen"
+          class="md:hidden p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 transition-all"
+        >
+          <x-icon v-if="mobileOpen" class="w-4 h-4 text-yellow-500" />
+          <menu-icon v-else class="w-4 h-4" />
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile menu -->
+    <Transition name="mobile-menu">
+      <div
+        v-if="mobileOpen"
+        class="absolute top-full mt-2 left-4 right-4 rounded-2xl border border-yellow-500/20 bg-black/95 backdrop-blur-xl p-3 flex flex-col gap-1 shadow-xl shadow-black/60"
+      >
+        <a
+          v-for="item in navItems"
+          :key="item.href"
+          :href="item.href"
+          @click="mobileOpen = false"
+          class="px-4 py-2.5 rounded-xl text-sm font-medium transition-all"
+          :class="activeSection === item.id
+            ? 'text-yellow-500 bg-yellow-500/10'
+            : 'text-zinc-400 hover:text-white hover:bg-white/5'"
+        >{{ item.label }}</a>
+      </div>
+    </Transition>
+  </header>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import {
-  Menu as MenuIcon,
-  X as XIcon,
-  Sun as SunIcon,
-  Moon as MoonIcon,
-  Globe as GlobeIcon
-} from 'lucide-vue-next';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { Sun as SunIcon, Moon as MoonIcon, Menu as MenuIcon, X as XIcon } from 'lucide-vue-next';
 
 const props = defineProps({
   isDark: Boolean,
@@ -92,21 +85,52 @@ const props = defineProps({
   t: Function
 });
 
-const mobileMenuOpen = ref(false);
-
-const toggleMobileMenu = () => {
-  mobileMenuOpen.value = !mobileMenuOpen.value;
-};
-
-const closeMobileMenu = () => {
-  mobileMenuOpen.value = false;
-};
+const scrolled      = ref(false);
+const mobileOpen    = ref(false);
+const activeSection = ref('home');
 
 const navItems = computed(() => [
-  { href: "#home", label: props.t('nav.home') },
-  { href: "#skills", label: props.t('nav.skills') },
-  { href: "#experience", label: props.t('nav.experience') },
-  { href: "#projects", label: props.t('nav.projects') },
-  { href: "#contact", label: props.t('nav.contact') }
+  { href: '#home',       id: 'home',       label: props.t('nav.home') },
+  { href: '#homebot',    id: 'homebot',    label: props.t('nav.homebot') },
+  { href: '#projects',   id: 'projects',   label: props.t('nav.projects') },
+  { href: '#skills',     id: 'skills',     label: props.t('nav.skills') },
+  { href: '#experience', id: 'experience', label: props.t('nav.experience') },
+  { href: '#contact',    id: 'contact',    label: props.t('nav.contact') }
 ]);
+
+let sectionObserver = null;
+
+const onScroll = () => {
+  scrolled.value = window.scrollY > 40;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  sectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) activeSection.value = entry.target.id;
+      });
+    },
+    { threshold: 0, rootMargin: '-30% 0px -60% 0px' }
+  );
+
+  document.querySelectorAll('section[id]').forEach((s) => sectionObserver.observe(s));
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onScroll);
+  sectionObserver?.disconnect();
+});
 </script>
+
+<style scoped>
+.mobile-menu-enter-active, .mobile-menu-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.mobile-menu-enter-from, .mobile-menu-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+</style>
