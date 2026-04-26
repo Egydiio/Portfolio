@@ -1,41 +1,52 @@
 <template>
-  <section id="experience" class="py-20 bg-gray-50 dark:bg-gray-900">
+  <section id="experience" ref="sectionRef" class="py-24 bg-black relative">
+    <div class="absolute top-0 left-0 right-0 h-px divider"></div>
+
     <div class="container mx-auto px-4">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+      <div class="text-center mb-14 reveal">
+        <span class="text-xs font-mono text-zinc-600 uppercase tracking-widest">— history —</span>
+        <h2 class="text-3xl md:text-4xl font-bold mt-3 mb-3 text-white">
           {{ t('experience.title') }} <span class="text-yellow-500">{{ t('experience.titleHighlight') }}</span>
         </h2>
-        <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-          {{ t('experience.description') }}
-        </p>
+        <p class="text-zinc-500 max-w-xl mx-auto text-sm">{{ t('experience.description') }}</p>
       </div>
 
       <div class="max-w-3xl mx-auto">
         <div
-            v-for="(job, index) in jobs"
-            :key="index"
-            class="relative pl-8 pb-12 border-l border-yellow-500"
-            :class="{ 'border-l-0': index === jobs.length - 1 }"
+          v-for="(job, i) in jobs"
+          :key="i"
+          class="relative pl-8 pb-10 reveal"
+          :class="`reveal-delay-${i + 1}`"
         >
-          <div class="absolute left-0 top-0 w-4 h-4 bg-yellow-500 rounded-full -translate-x-2"></div>
-          <div class="bg-white dark:bg-black p-6 rounded-lg border border-gray-200 dark:border-yellow-500/20">
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
-              <h3 class="text-xl font-bold">{{ job.title }}</h3>
-              <div class="flex items-center mt-2 md:mt-0">
-                <calendar-icon class="w-4 h-4 text-yellow-500 mr-1" />
-                <span class="text-gray-500 dark:text-gray-400">{{ job.period }}</span>
+          <!-- Timeline line -->
+          <div
+            v-if="i < jobs.length - 1"
+            class="absolute left-[11px] top-4 bottom-0 w-px bg-gradient-to-b from-yellow-500/40 to-transparent"
+          ></div>
+          <!-- Timeline dot -->
+          <div class="absolute left-0 top-1 w-[22px] h-[22px] rounded-full bg-black border-2 border-yellow-500 flex items-center justify-center">
+            <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+          </div>
+
+          <!-- Card -->
+          <div class="card p-6 ml-2">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+              <div>
+                <h3 class="font-bold text-white">{{ job.title }}</h3>
+                <p class="text-yellow-500 text-sm font-medium mt-0.5">{{ job.company }}</p>
+              </div>
+              <div class="flex items-center gap-1.5 text-xs text-zinc-600 font-mono whitespace-nowrap">
+                <calendar-icon class="w-3.5 h-3.5" />
+                {{ job.period }}
               </div>
             </div>
-            <h4 class="text-yellow-500 mb-4">{{ job.company }}</h4>
-            <p class="text-gray-600 dark:text-gray-300 whitespace-pre-line">{{ job.description }}</p>
-            <div class="mt-4 flex flex-wrap gap-2">
+            <p class="text-zinc-400 text-sm leading-relaxed whitespace-pre-line mb-4">{{ job.description }}</p>
+            <div class="flex flex-wrap gap-1.5">
               <span
-                  v-for="tech in job.technologies"
-                  :key="tech"
-                  class="bg-yellow-500/20 text-yellow-500 px-3 py-1 rounded-full text-sm"
-              >
-                {{ tech }}
-              </span>
+                v-for="tech in job.technologies"
+                :key="tech"
+                class="px-2.5 py-1 bg-zinc-900 border border-zinc-800 rounded-lg text-xs font-mono text-zinc-400"
+              >{{ tech }}</span>
             </div>
           </div>
         </div>
@@ -45,12 +56,13 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { Calendar as CalendarIcon } from 'lucide-vue-next';
+import { useReveal } from '../../composables/useReveal';
 
-const props = defineProps({
-  t: Function
-});
+const props = defineProps({ t: Function });
+const sectionRef = ref(null);
+useReveal(sectionRef);
 
 const jobs = computed(() => props.t('experience.jobs'));
 </script>
